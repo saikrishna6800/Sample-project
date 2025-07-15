@@ -16,7 +16,7 @@ pipeline {
             }
         }
 
-        stage('Archive') {
+        stage('Archive') {///////////////
             steps {
                 archiveArtifacts artifacts: 'build.log'
             }
