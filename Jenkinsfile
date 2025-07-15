@@ -1,27 +1,34 @@
 pipeline {
     agent any
 
-    parameters {
-        string(name: 'APP_VERSION', defaultValue: 'v1.0.0', description: 'Enter app version')
-    }
-
     stages {
         stage('Checkout') {
             steps {
-                echo "Cloning repo for version: ${params.APP_VERSION}"
+                echo 'Cloning from GitHub...'
+                checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                echo "Building application version ${params.APP_VERSION}"
+                echo 'Building the app...'
+                sh 'echo "build complete" > build.log'
             }
         }
 
-        stage('Deploy') {
+        stage('Archive') {
             steps {
-                echo "Deploying version ${params.APP_VERSION} to production..."
+                archiveArtifacts artifacts: 'build.log'
             }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Build successful!'
+        }
+        failure {
+            echo '❌ Build failed!'
         }
     }
 }
